@@ -41,7 +41,7 @@ normalise_risk_category <- function(raw_database){
       # Key: 'row' / paper*evidence ID
       ev_id,
       
-      # Paper*risk information (so 'namespaced' because - per checks below - that 
+      # Paper*risk information (so 'namespaced' because - per checks later - 
       # certain info about a risk can vary by paper)
       cat_id, risk_category, 
       sub_cat_id, risk_subcategory, 

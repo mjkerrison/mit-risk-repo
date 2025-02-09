@@ -1,5 +1,16 @@
 
 
+#' Title
+#'
+#' @param data 
+#' @param fields 
+#' @param pattern 
+#' @param ignore.case 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 label_match_in_any_column <- function(data, 
                                       fields = NULL,
                                       pattern, 
@@ -15,12 +26,25 @@ label_match_in_any_column <- function(data,
     data,
     matches_freetext = if_any(
       field_tidyselect(),
-      \(x) str_detect(maybe_tolower(as.character(x)), maybe_lower_pattern)
+      \(x) str_detect(
+        maybe_tolower(as.character(x)), 
+        coll(maybe_lower_pattern) # NB we don't use regex
+      )
     )
   )
 }
 
 
+#' Title
+#'
+#' @param data 
+#' @param min_yr 
+#' @param max_yr 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 label_match_for_year <- function(data, min_yr, max_yr){
   
   mutate(
@@ -31,6 +55,21 @@ label_match_for_year <- function(data, min_yr, max_yr){
 }
 
 
+#' Title
+#'
+#' @param d_paper 
+#' @param d_risk_category 
+#' @param d_additional_evidence 
+#' @param input_query_freetext_fields 
+#' @param input_query_freetext 
+#' @param input_filter_year 
+#' @param input_sort_order 
+#' @param input_sort_by 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 label_all_linked_risk_data <- function(d_paper,
                                        d_risk_category,
                                        d_additional_evidence,
@@ -41,7 +80,7 @@ label_all_linked_risk_data <- function(d_paper,
                                        input_sort_order,
                                        input_sort_by){
   
-  label_match_in_any_column_P <- partial(filter_any_match,
+  label_match_in_any_column_P <- partial(label_match_in_any_column,
                                          fields = input_query_freetext_fields,
                                          pattern = input_query_freetext,
                                          ignore.case = TRUE)
@@ -94,9 +133,8 @@ label_all_linked_risk_data <- function(d_paper,
     map(\(tbl_i){
       # Bit of magic - thanks Claude.
       # Could also have used NAs for FALSE and then done a coalesce(c_across())
-      mutate(tbl_i, matches = if_any(starts_with("matches_"), identity))
+      mutate(tbl_i, matches = if_all(starts_with("matches_"), identity))
     })
-  
   
   
   return(all_results)

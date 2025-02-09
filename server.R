@@ -18,10 +18,10 @@ server <- function(input, output, session) {
   })
   
   
-  
-  
   filtered_cards_by_paper <- server_cards_by_paper("cards_by_paper", filtered_data)
   
+  # This one needs work...
+  # filtered_cards_by_risk <- server_cards_by_risk("cards_by_risk", filtered_data)
   
 }
 

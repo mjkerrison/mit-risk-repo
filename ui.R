@@ -9,26 +9,19 @@ ui <- bslib::page_sidebar(
   
   # Custom CSS
   tags$head(
-    tags$style(HTML("
-      .card-img-top {
-        height: 200px;
-        object-fit: cover;
-      }
-      .card {
-        transition: transform 0.2s;
-      }
-      .card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      }
-    "))
+    tags$link(rel = "stylesheet", type = "text/css", href = "customcss.css"),
+    tags$script(slidingSwitchBinding)
   ),
   
   sidebar = sidebar(
     
     # Free-text search
     card(
-      textInput("query_freetext", "Free text search", ""),
+      searchInput("query_freetext", 
+                  "Free text search", 
+                  "",
+                  btnSearch = icon("magnifying-glass"),
+                  btnReset = icon("xmark")),
       checkboxGroupInput("query_freetext_fields", "In fields:",
                          choices = c("title",
                                      "authors_full"),
@@ -44,10 +37,12 @@ ui <- bslib::page_sidebar(
       min = min(d_paper$year),
       max = max(d_paper$year),
       value = c(min(d_paper$year), max(d_paper$year)),
-      step = 1
+      step = 1,
+      sep = ""
     ),
     
     card(
+      height = "250px",
       selectInput(
         "sort_by", 
         "Sort by:",
@@ -56,12 +51,13 @@ ui <- bslib::page_sidebar(
                     "authors_short"),
         selected = "year"
       ),
-      selectInput(
-        "sort_order", 
-        "Sort order:",
-        choices = c("Ascending", "Descending"),
+      slidingSwitchInput( # Custom input
+        inputId = "sort_order",
+        label = "Sort order",
+        leftLabel = "Asc", rightLabel = "Desc", 
+        leftValue = "Ascending", rightValue = "Descending",
         selected = "Descending"
-      ),
+      )
     )
     
 
@@ -82,7 +78,7 @@ ui <- bslib::page_sidebar(
     
     nav_panel(
       title = "Explore by risk",
-      uiOutput("cards_by_risk")
+      ui_cards_by_risk("cards_by_risk")
     )
     
   )

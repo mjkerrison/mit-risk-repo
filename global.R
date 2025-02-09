@@ -7,6 +7,8 @@ library(glue)
 
 library(shiny)
 library(bslib)
+library(reactable)
+library(shinyWidgets)
 
 walk(
   list.files("R/", pattern = "\\.R$", full.names = TRUE),
