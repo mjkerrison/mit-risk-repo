@@ -2,8 +2,8 @@
 .Rhistory
 .RData
 .Ruserdata
-
 .Renviron
+rsconnect/
 
 cache/
 Claude/
